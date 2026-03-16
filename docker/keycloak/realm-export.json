@@ -1,0 +1,95 @@
+{
+  "realm": "railway-ai",
+  "enabled": true,
+  "displayName": "Railway AI Monitoring",
+  "sslRequired": "none",
+  "registrationAllowed": false,
+  "loginWithEmailAllowed": true,
+  "roles": {
+    "realm": [
+      {
+        "name": "operator",
+        "description": "Оператор - может просматривать детекции"
+      },
+      {
+        "name": "engineer",
+        "description": "Инженер - может загружать данные и управлять моделями"
+      },
+      {
+        "name": "admin",
+        "description": "Администратор - полный доступ"
+      }
+    ]
+  },
+  "users": [
+    {
+      "username": "operator",
+      "enabled": true,
+      "email": "operator@railway.com",
+      "firstName": "Оператор",
+      "lastName": "Сафонов",
+      "credentials": [
+        {
+          "type": "password",
+          "value": "operator123",
+          "temporary": false
+        }
+      ],
+      "realmRoles": ["operator"]
+    },
+    {
+      "username": "engineer",
+      "enabled": true,
+      "email": "engineer@railway.com",
+      "firstName": "Инженер",
+      "lastName": "Антонов",
+      "credentials": [
+        {
+          "type": "password",
+          "value": "engineer123",
+          "temporary": false
+        }
+      ],
+      "realmRoles": ["engineer"]
+    },
+    {
+      "username": "admin",
+      "enabled": true,
+      "email": "admin@railway.com",
+      "firstName": "Админ",
+      "lastName": "Лоскутов",
+      "credentials": [
+        {
+          "type": "password",
+          "value": "admin123",
+          "temporary": false
+        }
+      ],
+      "realmRoles": ["admin"]
+    }
+  ],
+  "clients": [
+    {
+      "clientId": "backend-service",
+      "enabled": true,
+      "publicClient": false,
+      "secret": "backend-secret-123",
+      "redirectUris": ["http://localhost:9898/*"],
+      "webOrigins": ["http://localhost:9898"],
+      "directAccessGrantsEnabled": true,
+      "serviceAccountsEnabled": true,
+      "authorizationServicesEnabled": true,
+      "standardFlowEnabled": true,
+      "implicitFlowEnabled": false
+    },
+    {
+      "clientId": "frontend-client",
+      "enabled": true,
+      "publicClient": true,
+      "redirectUris": ["http://localhost:3000/*"],
+      "webOrigins": ["http://localhost:3000"],
+      "directAccessGrantsEnabled": true,
+      "standardFlowEnabled": true
+    }
+  ]
+}
