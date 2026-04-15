@@ -30,3 +30,14 @@ logging:
     com.railway.ai: DEBUG
     org.springframework.web: INFO
     org.hibernate.SQL: DEBUG
+
+file:
+  upload-dir: ./uploads
+  image-dir: ./uploads/images
+  video-dir: ./uploads/videos
+  max-image-size: 10485760  # 10MB
+  max-video-size: 104857600 # 100MB
+
+model:
+  directory: ./models
+  name: yolov8.onnx
