@@ -43,6 +43,14 @@ public class FileStorageService {
         return saveFile(file, videoDir, "video");
     }
 
+    public Path getStoredImagePath(String relativePath) {
+        return Paths.get(imageDir).resolve(relativePath).normalize();
+    }
+
+    public Path getStoredVideoPath(String relativePath) {
+        return Paths.get(videoDir).resolve(relativePath).normalize();
+    }
+
     private String saveFile(MultipartFile file, String baseDir, String type) throws IOException {
         // Создаем директорию если не существует
         Path uploadPath = Paths.get(baseDir);
@@ -89,7 +97,9 @@ public class FileStorageService {
         String contentType = file.getContentType();
         return contentType != null &&
                 (contentType.equals("video/mp4") ||
-                        contentType.equals("video/mpeg")) &&
+                        contentType.equals("video/mpeg") ||
+                        contentType.equals("video/quicktime") ||
+                        contentType.equals("video/x-msvideo")) &&
                 file.getSize() <= maxVideoSize;
     }
 }

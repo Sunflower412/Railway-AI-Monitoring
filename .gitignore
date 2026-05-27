@@ -1,5 +1,13 @@
 HELP.md
 target/
+.m2/
+server*.log
+Ultralytics/
+uploads/
+data/
+models/*.pt
+models/yolo11n*.onnx
+models/AI/
 .mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
 !**/src/test/**/target/

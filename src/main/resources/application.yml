@@ -2,26 +2,6 @@ spring:
   application:
     name: railway-ai-monitoring
 
-  datasource:
-    url: jdbc:postgresql://localhost:5432/railway_db
-    username: postgres
-    password: postgres
-    driver-class-name: org.postgresql.Driver
-    hikari:
-      maximum-pool-size: 10
-      minimum-idle: 5
-      connection-timeout: 30000
-
-  jpa:
-    hibernate:
-      ddl-auto: update
-    show-sql: true
-    properties:
-      hibernate:
-        dialect: org.hibernate.dialect.PostgreSQLDialect
-        format_sql: true
-    open-in-view: false
-
 server:
   port: 9898
 
@@ -29,7 +9,6 @@ logging:
   level:
     com.railway.ai: DEBUG
     org.springframework.web: INFO
-    org.hibernate.SQL: DEBUG
 
 file:
   upload-dir: ./uploads
@@ -38,6 +17,14 @@ file:
   max-image-size: 10485760  # 10MB
   max-video-size: 104857600 # 100MB
 
+report:
+  storage-dir: ./data/reports
+
 model:
   directory: ./models
-  name: yolov8.onnx
+  name: best.onnx
+  class-names: person,train,railway,tree
+  confidence-threshold: 0.25
+  iou-threshold: 0.45
+  max-detections: 50
+  video-max-frames: 6
