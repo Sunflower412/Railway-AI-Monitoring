@@ -95,7 +95,7 @@ public class MediaController {
                     detections
             );
 
-            DetectionResponse response = toDetectionResponse(report);
+            DetectionResponse response = toDetectionResponse(report, detections);
 
             log.info("Image processed and report saved: reportId={}, detections={}", report.getId(), detections.size());
             return ResponseEntity.ok(response);
@@ -160,7 +160,7 @@ public class MediaController {
                     detections
             );
 
-            DetectionResponse response = toDetectionResponse(report);
+            DetectionResponse response = toDetectionResponse(report, detections);
 
             log.info("Video processed and report saved: reportId={}, detections={}", report.getId(), detections.size());
             return ResponseEntity.ok(response);
@@ -190,7 +190,10 @@ public class MediaController {
         );
     }
 
-    private DetectionResponse toDetectionResponse(AnalysisReport report) {
+    private DetectionResponse toDetectionResponse(
+            AnalysisReport report,
+            List<NeuralNetworkService.Detection> detections
+    ) {
         DetectionResponse response = new DetectionResponse();
         response.setId(report.getId());
         response.setObjectType(report.getDetectedTopObjectType());
@@ -203,7 +206,36 @@ public class MediaController {
         response.setStatus(report.getStatus());
         response.setMessage(report.getMessage());
         response.setReport(report.getReportText());
+        response.setDetections(toDetectionBoxes(detections));
         return response;
+    }
+
+    private List<DetectionResponse.DetectionBox> toDetectionBoxes(
+            List<NeuralNetworkService.Detection> detections
+    ) {
+        if (detections == null || detections.isEmpty()) {
+            return List.of();
+        }
+
+        return detections.stream()
+                .map(this::toDetectionBox)
+                .toList();
+    }
+
+    private DetectionResponse.DetectionBox toDetectionBox(NeuralNetworkService.Detection detection) {
+        DetectionResponse.DetectionBox box = new DetectionResponse.DetectionBox();
+        box.setObjectType(detection.getObjectType());
+        box.setConfidence(detection.getConfidence());
+
+        double[] rawBox = detection.getBoundingBox();
+        if (rawBox != null && rawBox.length == 4) {
+            box.setX(rawBox[0]);
+            box.setY(rawBox[1]);
+            box.setWidth(rawBox[2]);
+            box.setHeight(rawBox[3]);
+        }
+
+        return box;
     }
 
     @GetMapping("/reports/{id}")

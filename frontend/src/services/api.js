@@ -97,6 +97,7 @@ function normalizeDetectionResponse(response) {
     severity: getSeverity(response),
     description: response.message || 'Анализ завершен',
     reportText: response.report,
+    detections: normalizeDetectionBoxes(response.detections),
     imageUrl: getMediaUrl(response.imageUrl),
     videoUrl: getMediaUrl(response.videoUrl),
     raw: response,
@@ -121,10 +122,54 @@ function normalizeReport(report) {
     }),
     description: report.message || report.description || 'Отчет анализа',
     reportText: report.reportText,
+    detections: normalizeDetectionBoxes(parseDetectionsJson(report.detectionsJson)),
     imageUrl: getMediaUrl(report.imageUrl),
     videoUrl: getMediaUrl(report.videoUrl),
     raw: report,
   };
+}
+
+function parseDetectionsJson(value) {
+  if (!value) {
+    return [];
+  }
+
+  if (Array.isArray(value)) {
+    return value;
+  }
+
+  try {
+    return JSON.parse(value);
+  } catch (error) {
+    console.warn('Failed to parse detections JSON:', error.message);
+    return [];
+  }
+}
+
+function normalizeDetectionBoxes(detections) {
+  if (!Array.isArray(detections)) {
+    return [];
+  }
+
+  return detections
+    .map((detection) => {
+      const rawBox = detection.boundingBox;
+      const hasBoxArray = Array.isArray(rawBox) && rawBox.length === 4;
+      const x = Number(detection.x ?? (hasBoxArray ? rawBox[0] : 0));
+      const y = Number(detection.y ?? (hasBoxArray ? rawBox[1] : 0));
+      const width = Number(detection.width ?? (hasBoxArray ? rawBox[2] : 0));
+      const height = Number(detection.height ?? (hasBoxArray ? rawBox[3] : 0));
+
+      return {
+        objectType: detection.objectType || detection.type || 'unknown',
+        confidence: Number(detection.confidence || 0),
+        x,
+        y,
+        width,
+        height,
+      };
+    })
+    .filter((box) => box.width > 0 && box.height > 0);
 }
 
 function getSeverity(item) {

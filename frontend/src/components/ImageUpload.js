@@ -1,5 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { fetchModelStatus, getMediaUrl, uploadMedia } from '../services/api';
+import AnnotatedMedia from './AnnotatedMedia';
 import './ImageUpload.css';
 
 const ACCEPTED_MEDIA = 'image/jpeg,image/png,video/mp4,video/mpeg,video/quicktime,video/x-msvideo';
@@ -212,6 +213,14 @@ const ImageUpload = ({ onAnalysisComplete }) => {
             </div>
             <span className="badge success">Отчет #{analysisResult.id}</span>
           </div>
+
+          {analysisResult.mediaType !== 'video' && analysisResult.imageUrl && (
+            <AnnotatedMedia
+              src={getMediaUrl(analysisResult.imageUrl)}
+              detections={analysisResult.detections || []}
+              alt="AI annotated upload result"
+            />
+          )}
 
           <div className="media-upload__metrics">
             <div>

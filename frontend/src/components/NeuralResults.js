@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import AnnotatedMedia from './AnnotatedMedia';
 
 const TYPE_LABELS = {
   person: 'Человек',
@@ -110,6 +111,15 @@ const NeuralResults = ({ neuralDetections = [], loading, openEvent, refreshRepor
                 <div className="detection-location">{detection.location}</div>
                 <div className="detection-time">{detection.timestamp}</div>
                 <div className="detection-description">{detection.description}</div>
+                {detection.mediaType !== 'video' && detection.imageUrl && (
+                  <div className="mt12">
+                    <AnnotatedMedia
+                      src={detection.imageUrl}
+                      detections={detection.detections || []}
+                      alt="AI annotated report"
+                    />
+                  </div>
+                )}
                 {detection.reportText && (
                   <pre className="media-upload__report mt12">{detection.reportText}</pre>
                 )}
